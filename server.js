@@ -38,8 +38,8 @@ router.get("*", function(req, res){
 });
 
 app.delete('/notes', function (req, res) {
-    fs.send('Got a DELETE request at /notes')
-  })
+    fs.send('Got a DELETE request at /notes');
+  });
 
 app.use("/", router);
 
