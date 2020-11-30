@@ -25,9 +25,34 @@ router.get("/api/notes", function(req, res){
     console.log(req);
     fs.readFile(path.join(__dirname, "/db/db.json"),"UTF-8", function(error, file){
         file = JSON.parse(file);
+        file = file.map(function(note, index) {
+            note.id = index;
+            return note;
+        })
         res.json(file);
     });
 });
+
+router.post("/api/notes", function(req, res){
+    console.log(req);
+    fs.readFile(path.join(__dirname, "/db/db.json"),"UTF-8", function(error, file){
+        file = JSON.parse(file);
+        file.push(req.body);
+        fs.writeFile(path.join(__dirname, "/db/db.json"),JSON.stringify(file),"UTF-8", function(error, file) {
+            res.json(file);
+        });
+    });
+});
+
+router.delete('/api/notes/:id', function (req, res) {
+    fs.readFile(path.join(__dirname, "/db/db.json"),"UTF-8", function(error, file){
+        file = JSON.parse(file);
+        file.splice(req.params.id, 1);
+        fs.writeFile(path.join(__dirname, "/db/db.json"),JSON.stringify(file),"UTF-8", function(error, file) {
+            res.json(file);
+        });
+    });
+  });
 
 router.get("*", function(req, res){
     console.log(req);
@@ -36,10 +61,6 @@ router.get("*", function(req, res){
         res.send(file);
     });
 });
-
-app.delete('/notes', function (req, res) {
-    fs.send('Got a DELETE request at /notes');
-  });
 
 app.use("/", router);
 
